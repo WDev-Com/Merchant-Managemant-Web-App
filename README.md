@@ -26,7 +26,7 @@ The Merchant Management Web Application is designed to help merchants manage the
 
 ## Lighthouse testing
 
-![Screenshot 2024-07-08 115501](https://github.com/WDev-Com/merchant-management/assets/100411590/7afe4304-c7ab-45d4-8f02-e84e0d4bec3f)
+![Screenshot 2024-07-08 115501](https://github.com/WDev-Com/Merchant-Managemant-Web-App/assets/100411590/2058e4bb-863f-410f-a914-a71adcbbfb81)
 
 ## Deployed Application Link
 
