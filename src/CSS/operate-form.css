@@ -1,0 +1,103 @@
+* {
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.add-opreation {
+  height: 90vh;
+  /* background-color: aquamarine; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 150px;
+}
+
+.add-top {
+  display: flex;
+  width: 100%;
+  justify-content: start;
+  padding: 25px 40px 25px 40px;
+  gap: 30px;
+  h1 {
+    font-size: 1.4rem;
+    font-weight: bold;
+  }
+  button {
+    background-color: lightgreen;
+    width: 140px;
+    height: 40px;
+    border-radius: 20px;
+  }
+}
+
+.add-form {
+  border: 1px solid black;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .input-label {
+    width: 180px;
+    /* background-color: aqua; */
+  }
+  .add-input {
+    display: flex;
+    width: 90%;
+    /* background-color: aquamarine; */
+    margin: 25px 0px 0px 0px;
+    align-items: center;
+    justify-content: center;
+    .input {
+      /* background-color: bisque; */
+      position: relative;
+      input {
+        width: 100%;
+        border: 1px solid black;
+      }
+      .error {
+        position: absolute;
+        width: 250px;
+        top: 80%;
+        font-size: 1rem;
+        color: red;
+        left: 5px;
+      }
+    }
+    label {
+      padding: 10px;
+      margin: 0px 50px 0px 0px;
+    }
+  }
+}
+
+.add-m-btn {
+  display: flex;
+  width: 80%;
+  flex-wrap: wrap;
+  padding: 15px;
+  justify-content: center;
+  button {
+    margin: 15px;
+    background-color: lightgreen;
+    width: 140px;
+    height: 40px;
+    border-radius: 20px;
+  }
+}
+
+@media screen and (width > 1050px) {
+  .add-form {
+    width: 90%;
+
+    .add-input {
+      width: 55%;
+      .input {
+        input {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

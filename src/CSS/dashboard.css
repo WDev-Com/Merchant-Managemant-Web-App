@@ -1,0 +1,89 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.dashboard {
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.list-top {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 25px 40px;
+}
+
+.list-top h1 {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin: 10px;
+}
+
+.list-top button {
+  background-color: lightgreen;
+  width: 140px;
+  height: 40px;
+  margin: 10px;
+  border-radius: 20px;
+}
+
+.list-table {
+  min-width: 95%;
+  padding: 25px 40px;
+  border-collapse: collapse;
+}
+
+.list-table thead tr {
+  background-color: #d3d3d3;
+}
+
+.list-table th,
+.list-table td {
+  padding: 10px;
+  text-align: center;
+}
+
+.list-table tbody tr:nth-child(even) {
+  background-color: rgb(255, 255, 255);
+}
+
+.list-table tbody tr:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+
+.btn-action {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.btn-action button {
+  color: blue;
+  padding: 5px 7px 5px 7px;
+  background-color: aquamarine;
+  border-radius: 12px;
+}
+
+@media screen and (width < 850px) {
+  .list-table thead tr {
+    display: none;
+  }
+  .list-table td {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0px 20px 0px 20px;
+  }
+
+  td::before {
+    content: attr(datatitle) " : ";
+    padding: 0px 0px 0px 0px;
+    display: block;
+  }
+}
