@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import "../../CSS/navbar.css";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
+import { useDispatch } from "react-redux";
+import { logoutUserAsync } from "../auth/Authslice";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -12,7 +14,7 @@ const MDashBoardNavbar = () => {
   const [toggle, setToggle] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const navbarRef = useRef(null);
-  let navigate = useNavigate();
+  const dispatch = useDispatch();
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 1300) {
@@ -69,17 +71,6 @@ const MDashBoardNavbar = () => {
             ))}
           </ul>
         </div>
-        <div className="auth">
-          <button
-            id="logout"
-            onClick={() => {
-              // window.localStorage.removeItem("auth");
-              navigate("/#home");
-            }}
-          >
-            Logout
-          </button>
-        </div>
         {toggle && (
           <div className="toggle-button" onClick={handleToggleClick}>
             <i
@@ -105,8 +96,7 @@ const MDashBoardNavbar = () => {
             <button
               id="logout"
               onClick={() => {
-                // window.localStorage.removeItem("auth");
-                navigate("/#home");
+                dispatch(logoutUserAsync());
               }}
             >
               Logout

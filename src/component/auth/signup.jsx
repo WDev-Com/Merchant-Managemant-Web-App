@@ -1,12 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../CSS/authform.css";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { selectSignup, selectToken, signUpUserAsync } from "./Authslice";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 const signup = () => {
+  const dispatch = useDispatch();
+  const signupStatus = useSelector(selectSignup);
+  useEffect(() => {
+    if (signupStatus) {
+      navigate("/loginpage");
+    }
+  }, [signupStatus]);
   const navigate = useNavigate();
   const [showpass, setShowpass] = useState(false);
 
@@ -54,20 +63,11 @@ const signup = () => {
         onSubmit={(e) => {
           e.preventDefault();
           if (validateInputs()) {
-            if (credentials.username == "admin") {
-              window.localStorage.setItem(
-                "adminauth",
-                JSON.stringify(credentials)
-              );
-            } else {
-              window.localStorage.setItem("auth", JSON.stringify(credentials));
-            }
-
+            dispatch(signUpUserAsync(credentials));
             setCredentials({
               username: "",
               password: "",
             });
-            navigate("/loginpage");
           }
         }}
       >

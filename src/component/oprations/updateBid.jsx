@@ -2,30 +2,33 @@ import React, { useEffect, useState } from "react";
 import InchargeNavbar from "./inchargeNavbar";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  selectBidsById,
-  getBidsById,
-  updateBidReducer,
-} from "./operationSlice";
+
 import "../../CSS/operate-form.css";
+import {
+  fetchBidByIdAsync,
+  selectCurrentBid,
+  updateBidAsync,
+} from "./operationSlice";
 
 const updateBidPage = () => {
-  let { id } = useParams();
+  let { BidID } = useParams();
+  // console.log(BidID);
   let dispatch = useDispatch();
-  let currBid = useSelector(selectBidsById);
+  let currBid = useSelector(selectCurrentBid);
+  // console.log(currBid);
   useEffect(() => {
-    if (id) {
-      dispatch(getBidsById(Number(id)));
+    if (BidID) {
+      dispatch(fetchBidByIdAsync(BidID));
     }
-  }, [id, dispatch]);
+  }, [BidID, dispatch]);
 
   useEffect(() => {
-    if (currBid && currBid.bidId) {
+    if (currBid && currBid._id) {
       setBidData(currBid);
     }
   }, [currBid]);
   const [bidData, setBidData] = useState({
-    bidId: currBid.bidId || "",
+    assetName: currBid.assetName || "",
     assetType: currBid.assetType || "",
     yearlyReturn: currBid.yearlyReturn || 1,
     holdingPeriod: currBid.holdingPeriod || 1,
@@ -33,6 +36,7 @@ const updateBidPage = () => {
   });
 
   const [errors, setErrors] = useState({
+    assetName: "",
     assetType: "",
     yearlyReturn: "",
     holdingPeriod: "",
@@ -55,8 +59,10 @@ const updateBidPage = () => {
       errors.assetType = "Asset Type is required";
       isValid = false;
     }
-
-    if (!bidData.yearlyReturn.trim()) {
+    if (!bidData.assetName.trim()) {
+      errors.assetName = "Asset Name is required";
+    }
+    if (!bidData.yearlyReturn) {
       errors.yearlyReturn = "Yearly Return is required";
       isValid = false;
     } else if (bidData.yearlyReturn <= 0) {
@@ -64,7 +70,7 @@ const updateBidPage = () => {
       isValid = false;
     }
 
-    if (!bidData.holdingPeriod.trim()) {
+    if (!bidData.holdingPeriod) {
       errors.holdingPeriod = "Holding Period is required";
       isValid = false;
     } else if (bidData.holdingPeriod <= 0) {
@@ -72,7 +78,7 @@ const updateBidPage = () => {
       isValid = false;
     }
 
-    if (!bidData.ask.trim()) {
+    if (!bidData.ask) {
       errors.ask = "Ask is required";
       isValid = false;
     } else if (bidData.ask <= 0) {
@@ -87,15 +93,14 @@ const updateBidPage = () => {
   const updateBidMeth = (e) => {
     e.preventDefault();
     if (validateInputs()) {
-      dispatch(updateBidReducer(bidData));
+      dispatch(updateBidAsync({ bidId: currBid._id, updatedData: bidData }));
       setBidData({
-        bidId: "",
+        assetName: "",
         assetType: "",
         yearlyReturn: "",
         holdingPeriod: "",
         ask: "",
       });
-      alert("Bid Updated");
     }
   };
 
@@ -113,6 +118,23 @@ const updateBidPage = () => {
           <h1>Update Bid</h1>
         </div>
         <form className="add-form">
+          <div className="add-input">
+            <div className="input-label">
+              <label htmlFor="assetName">Asset Name</label>
+            </div>
+            <div className="input">
+              <input
+                type="text"
+                min="1"
+                name="assetName"
+                onChange={inputHandler}
+                value={bidData.assetName}
+              />
+              {errors.assetName && (
+                <span className="error">{errors.assetName}</span>
+              )}
+            </div>
+          </div>
           <div className="add-input">
             <div className="input-label">
               <label htmlFor="assetType">Asset Type</label>

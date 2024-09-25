@@ -19,6 +19,8 @@ import ViewMerchantBids from "./component/oprations/viewBids";
 import Layout from "./component/common/Layout";
 import ProtectedAdmin from "./component/auth/ProtectedAdim";
 import ProtectedUser from "./component/auth/ProtectedUser";
+import { selectUserInfo } from "./component/auth/Authslice";
+import { useSelector } from "react-redux";
 const router = createBrowserRouter([
   {
     element: <Layout />,
@@ -44,7 +46,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/Updatebid/:id",
+        path: "/Updatebid/:BidID",
         element: (
           <ProtectedAdmin>
             <UpdateBids />
@@ -76,7 +78,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/updatemerchant/:id",
+        path: "/updatemerchant/:MID",
         element: (
           <ProtectedAdmin>
             <UpdateMerchant />
@@ -84,7 +86,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/viewMerchantbids/:id",
+        path: "/viewMerchantbids/:mid",
         element: (
           <ProtectedAdmin>
             <ViewMerchantBids />
@@ -100,7 +102,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/mDashBoard/:mid",
+        path: "/mDashBoard",
         element: (
           <ProtectedUser>
             <MerchantDashboard />
@@ -120,6 +122,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const userInfo = useSelector(selectUserInfo);
   return <RouterProvider router={router} />;
 }
 

@@ -4,10 +4,10 @@ import InchargeNavbar from "./inchargeNavbar";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  removeMerchant,
-  getMerchantByPage,
   selectPaginatedMerchants,
-  selectMerchants,
+  fetchMerchantsByPaginationAsync,
+  selectMerchantTotalCount,
+  deleteMerchantAsync,
 } from "./operationSlice";
 import Pagination from "../common/Pagination";
 
@@ -15,17 +15,24 @@ const MerchantManagement = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const paginatedMerchants = useSelector(selectPaginatedMerchants);
-  const totalMerchants = useSelector(selectMerchants);
+  const totalMerchants = useSelector(selectMerchantTotalCount);
+  // console.log(paginatedMerchants);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 5;
 
   useEffect(() => {
-    dispatch(getMerchantByPage({ page: currentPage, perPage: itemsPerPage }));
+    dispatch(
+      fetchMerchantsByPaginationAsync({
+        page: currentPage,
+        limit: itemsPerPage,
+      })
+    );
   }, [dispatch, currentPage, itemsPerPage]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+  console.log(paginatedMerchants);
 
   return (
     <>
@@ -51,24 +58,26 @@ const MerchantManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {paginatedMerchants.map((ele) => (
-              <tr key={ele.id} className="table-data">
-                <td datatitle="ID">{ele.id}</td>
-                <td datatitle="Name">{`${ele.fname.toUpperCase()} ${ele.lname.toUpperCase()}`}</td>
+            {paginatedMerchants.map((ele, ind) => (
+              <tr key={ele._id + ind} className="table-data">
+                <td datatitle="ID">{ele._id}</td>
+                <td datatitle="Name">{`${ele.name}`}</td>
                 <td datatitle="Username">{ele.username}</td>
-                <td datatitle="Category">{ele.type}</td>
+                <td datatitle="Category">{ele.category}</td>
                 <td datatitle="Email">{ele.email}</td>
                 <td datatitle="Phone">{ele.phone}</td>
                 <td datatitle="Address">{ele.address}</td>
                 <td datatitle="Action" className="btn-action">
-                  <button onClick={() => navigate(`/updatemerchant/${ele.id}`)}>
+                  <button
+                    onClick={() => navigate(`/updatemerchant/${ele._id}`)}
+                  >
                     Edit
                   </button>
                   |
                   <button
                     onClick={() => {
                       if (confirm("Are you sure you want to delete this")) {
-                        dispatch(removeMerchant(ele.id));
+                        dispatch(deleteMerchantAsync(ele._id));
                       }
                     }}
                   >
@@ -76,7 +85,7 @@ const MerchantManagement = () => {
                   </button>
                   |
                   <button
-                    onClick={() => navigate(`/viewMerchantbids/${ele.id}`)}
+                    onClick={() => navigate(`/viewMerchantbids/${ele._id}`)}
                   >
                     Bids
                   </button>
@@ -86,7 +95,7 @@ const MerchantManagement = () => {
           </tbody>
         </table>
         <Pagination
-          totalItems={totalMerchants.length}
+          totalItems={totalMerchants}
           itemsPerPage={itemsPerPage}
           onPageChange={handlePageChange}
         />

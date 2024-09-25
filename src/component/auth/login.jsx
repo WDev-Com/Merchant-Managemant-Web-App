@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../CSS/authform.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+
 import {
-  getMerchantByUserName,
-  selectMerchant,
-} from "../oprations/operationSlice";
-import { login } from "./Authslice";
+  authError,
+  login,
+  loginUserAsync,
+  selectToken,
+  selectUserInfo,
+} from "./Authslice";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -15,7 +18,21 @@ function classNames(...classes) {
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const token = useSelector(selectToken);
+  // console.log(token);
+  const userInfo = useSelector(selectUserInfo);
+  // console.log(userInfo);
+  useEffect(() => {
+    if (token) {
+      localStorage.setItem("token", JSON.stringify({ token: token }));
+      if (userInfo.role == "user") {
+        navigate("/mDashBoard");
+      }
+      if (userInfo.role == "admin") {
+        navigate("/merchantlist");
+      }
+    }
+  }, [token]);
   const [showpass, setShowpass] = useState(false);
   const [logincred, setLogincred] = useState({
     username: "",
@@ -26,7 +43,6 @@ const Login = () => {
     password: "",
   });
 
-  const merchant = useSelector(selectMerchant);
   const togglePasswordVisibility = () => {
     setShowpass(!showpass);
   };
@@ -71,39 +87,8 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     if (validateInputs()) {
-      await dispatch(getMerchantByUserName(logincred.username));
-      let user;
-      if (logincred.username === "admin") {
-        user = window.localStorage.getItem("adminauth");
-      } else {
-        user = window.localStorage.getItem("auth");
-      }
-      let obj = JSON.parse(user);
-
-      if (
-        obj &&
-        obj.username === logincred.username &&
-        obj.password === logincred.password
-      ) {
-        dispatch(
-          login({ username: logincred.username, password: logincred.password })
-        );
-        // console.log("Login successful:", {
-        //   username: logincred.username,
-        //   password: logincred.password,
-        // });
-
-        if (logincred.username === "admin") {
-          navigate("/merchantlist");
-          clearForm();
-        } else if (merchant.id) {
-          navigate(`/mDashBoard/${merchant.id}`);
-          clearForm();
-          // console.log("ok");
-        }
-      } else {
-        alert("Invalid username or password");
-      }
+      dispatch(loginUserAsync(logincred));
+      clearForm();
     }
   };
   return (

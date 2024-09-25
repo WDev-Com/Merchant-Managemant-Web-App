@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import InchargeNavbar from "./inchargeNavbar";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { addNewBid } from "./operationSlice";
 import "../../CSS/operate-form.css";
+import { createNewBidAsync } from "./operationSlice";
 
 const AddNewBids = () => {
   const [bidData, setBidData] = useState({
-    bidId: "",
+    assetName: "",
     assetType: "",
     yearlyReturn: 0,
     holdingPeriod: 0,
@@ -15,6 +15,7 @@ const AddNewBids = () => {
   });
 
   const [errors, setErrors] = useState({
+    assetName: "",
     assetType: "",
     yearlyReturn: "",
     holdingPeriod: "",
@@ -34,14 +35,15 @@ const AddNewBids = () => {
   const handleBlur = (event) => {
     const { name, value } = event.target;
     let error = "";
-
     if (name === "assetType" && !value.trim()) {
       error = "Asset Type is required";
-    } else if (name === "yearlyReturn") {
+    } else if (name === "assetName" || !value.trim()) {
+      error = "Asset Name is required";
+    } else if (name === "holdingPeriod") {
       if (!value.trim()) {
-        error = "Yearly Return is required";
+        error = "Holding Period is required";
       } else if (value <= 0) {
-        error = "Yearly Return should be greater than 0";
+        error = "Holding Period should be greater than 0";
       }
     } else if (name === "holdingPeriod") {
       if (!value.trim()) {
@@ -103,21 +105,15 @@ const AddNewBids = () => {
     e.preventDefault();
     if (validateInputs()) {
       let newBid = { ...bidData };
-      newBid.bidId = Math.floor(
-        Math.random() *
-          bidData.assetType.charCodeAt(0) *
-          bidData.assetType.charCodeAt(bidData.assetType.length - 1) *
-          0.9
-      );
-      dispatch(addNewBid(newBid));
+      // console.log(newBid);
+      dispatch(createNewBidAsync(newBid));
       setBidData({
-        bidId: "",
+        assetName: "",
         assetType: "",
         yearlyReturn: "",
         holdingPeriod: "",
         ask: "",
       });
-      alert("Bid created");
     }
   };
 
@@ -135,6 +131,23 @@ const AddNewBids = () => {
           <h1>Add New Bid</h1>
         </div>
         <form className="add-form">
+          <div className="add-input">
+            <div className="input-label">
+              <label htmlFor="assetName">Asset Name</label>
+            </div>
+            <div className="input">
+              <input
+                type="text"
+                name="assetName"
+                onChange={inputHandler}
+                onBlur={handleBlur}
+                value={bidData.assetName}
+              />
+              {errors.assetType && (
+                <span className="error">{errors.assetType}</span>
+              )}
+            </div>
+          </div>
           <div className="add-input">
             <div className="input-label">
               <label htmlFor="assetType">Asset Type</label>

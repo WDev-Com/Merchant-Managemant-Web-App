@@ -2,61 +2,86 @@ import React, { useEffect, useState } from "react";
 import "../../CSS/operate-form.css";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addNewMerchant,
-  getMerchantById,
-  selectMerchant,
-  updateMerchant,
-} from "./operationSlice";
+
 import InchargeNavbar from "./inchargeNavbar";
+import {
+  fetchMerchantByIdAsync,
+  selectCurrentMerchant,
+  updateMerchantAsync,
+} from "./operationSlice";
 
 const UpdateMerchant = () => {
-  const { id } = useParams();
+  const { MID } = useParams();
   const dispatch = useDispatch();
-  const currMerchant = useSelector(selectMerchant);
-
+  const currMerchant = useSelector(selectCurrentMerchant);
+  // console.log(currMerchant);
   const [datas, setDatas] = useState({
-    id: "",
     fname: "",
     lname: "",
     username: "",
-    type: "",
+    category: "",
     address: "",
     email: "",
     phone: "",
-    imgurl: "",
+    profileImg: "",
   });
+
+  function inputHandler(event) {
+    let { name, value } = event.target;
+    setDatas((preVal) => {
+      return {
+        ...preVal,
+        [name]: value,
+      };
+    });
+  }
 
   const [errors, setErrors] = useState({
     fname: "",
     lname: "",
     username: "",
-    type: "",
+    category: "",
     email: "",
     address: "",
     phone: "",
-    imgurl: "",
+    profileImg: "",
   });
 
   useEffect(() => {
-    if (id) {
-      dispatch(getMerchantById(Number(id)));
+    if (MID) {
+      dispatch(fetchMerchantByIdAsync(MID));
     }
-  }, [id, dispatch]);
+  }, [MID, dispatch]);
 
   useEffect(() => {
-    if (currMerchant && currMerchant.id) {
-      setDatas(currMerchant);
+    if (currMerchant && currMerchant._id) {
+      let nameParts = currMerchant.name.split(" ");
+      if (nameParts.length === 1) {
+        setDatas((prev) => ({
+          ...prev,
+          fname: nameParts[0],
+          lname: "",
+        }));
+      } else {
+        setDatas((prev) => ({
+          ...prev,
+          fname: nameParts[0],
+          lname: nameParts[1],
+        }));
+      }
+
+      // Set other merchant data
+      setDatas((prev) => ({
+        ...prev,
+        username: currMerchant.username,
+        category: currMerchant.category,
+        address: currMerchant.address,
+        email: currMerchant.email,
+        phone: currMerchant.phone,
+        profileImg: currMerchant.profileImg,
+      }));
     }
   }, [currMerchant]);
-
-  const inputHandler = (event) => {
-    const { name, value } = event.target;
-    setDatas((prevVal) => ({
-      ...prevVal,
-      [name]: value,
-    }));
-  };
 
   const handleBlur = (event) => {
     const { name, value } = event.target;
@@ -85,9 +110,9 @@ const UpdateMerchant = () => {
       }
     } else if (name === "address" && !value.trim()) {
       error = "Address is required";
-    } else if (name === "type" && !value.trim()) {
-      error = "Merchant Type is required";
-    } else if (name === "imgurl" && !value.trim()) {
+    } else if (name === "category" && !value.trim()) {
+      error = "Merchant Category is required";
+    } else if (name === "profileImg" && !value.trim()) {
       error = "Image URL is required";
     }
 
@@ -101,19 +126,18 @@ const UpdateMerchant = () => {
     e.preventDefault();
     const valid = Object.values(errors).every((err) => err === "");
     if (valid) {
-      dispatch(updateMerchant(datas));
+      dispatch(updateMerchantAsync({ id: currMerchant._id, datas }));
       setDatas({
         fname: "",
         lname: "",
         username: "",
-        type: "",
         address: "",
+        category: "",
         email: "",
         phone: "",
-        imgurl: "",
+        profileImg: "",
       });
       setErrors({});
-      alert("Merchant updated");
     }
   };
 
@@ -176,12 +200,14 @@ const UpdateMerchant = () => {
             <div className="input">
               <input
                 type="text"
-                name="type"
+                name="category"
                 onChange={inputHandler}
                 onBlur={handleBlur}
-                value={datas.type}
+                value={datas.category}
               />
-              {errors.type && <span className="error">{errors.type}</span>}
+              {errors.category && (
+                <span className="error">{errors.category}</span>
+              )}
             </div>
           </div>
           <div className="add-input">
@@ -230,12 +256,14 @@ const UpdateMerchant = () => {
             <div className="input">
               <input
                 type="text"
-                name="imgurl"
+                name="profileImg"
                 onChange={inputHandler}
                 onBlur={handleBlur}
-                value={datas.imgurl}
+                value={datas.profileImg}
               />
-              {errors.imgurl && <span className="error">{errors.imgurl}</span>}
+              {errors.profileImg && (
+                <span className="error">{errors.profileImg}</span>
+              )}
             </div>
           </div>
 
@@ -248,10 +276,10 @@ const UpdateMerchant = () => {
                   fname: "",
                   lname: "",
                   address: "",
-                  type: "",
+                  category: "",
                   email: "",
                   phone: "",
-                  imgurl: "",
+                  profileImg: "",
                 });
                 setErrors({});
               }}

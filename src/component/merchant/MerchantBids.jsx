@@ -3,36 +3,42 @@ import MDashBoardNavbar from "./MNavbar";
 import "../../CSS/dashboard.css";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+
 import {
-  deleteBid,
-  getMerchantById,
-  selectMerchant,
-} from "../oprations/operationSlice";
+  getBidsByMerchantIdAsync,
+  selectMerchantBids,
+  deleteMerchantBidAsync,
+} from "./merchantSilce"; // Assuming deleteBid is defined here
 
 const MerchantBids = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { mid } = useParams();
-  const currMerchant = useSelector(selectMerchant);
+  const { mid } = useParams(); // mid from URL params
   const [bids, setBids] = useState([]);
+  const merchantBids = useSelector(selectMerchantBids);
 
+  // Fetch merchant bids when component mounts
   useEffect(() => {
     if (mid) {
-      dispatch(getMerchantById(Number(mid)));
-    }
-  }, [mid, dispatch]);
+      dispatch(getBidsByMerchantIdAsync(mid));
+    } else {
+      console.error("Merchant ID is undefined");
+    } // Use the merchant ID from params
+  }, [dispatch, mid]);
 
+  // Set the bids from Redux state to local component state
   useEffect(() => {
-    if (currMerchant.bids) {
-      setBids(currMerchant.bids);
+    if (merchantBids) {
+      setBids(merchantBids);
     }
-  }, [currMerchant.bids]);
+  }, [merchantBids]);
 
+  // Handle bid deletion
   const handleDelete = (bidId) => {
     const val = window.confirm("Are you sure you want to delete?");
     if (val) {
-      dispatch(deleteBid({ merchantId: currMerchant.id, bidId }));
-      setBids(bids.filter((bid) => bid.bidId !== bidId));
+      dispatch(deleteMerchantBidAsync({ merchantId: mid, bidId })); // Dispatch delete action
+      setBids(bids.filter((bid) => bid.bidId !== bidId)); // Update local state
       alert("Deleted Successfully");
     }
   };
@@ -42,7 +48,7 @@ const MerchantBids = () => {
       <MDashBoardNavbar />
       <div className="dashboard">
         <div className="list-top">
-          <Link to={`/mDashBoard/${mid}`}>
+          <Link to={`/mDashBoard`}>
             <button>Back</button>
           </Link>
           <h1>Merchant Bids List</h1>

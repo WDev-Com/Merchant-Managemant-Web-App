@@ -3,21 +3,18 @@ import "../../CSS/operate-form.css";
 import InchargeNavbar from "./inchargeNavbar";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addNewMerchant, selectMerchants } from "./operationSlice";
+import { createMerchantAsync } from "./operationSlice";
 
 const AddNewMerchant = () => {
-  const merchants = useSelector(selectMerchants);
-
   const [datas, setDatas] = useState({
-    id: "",
     fname: "",
     lname: "",
     username: "",
-    type: "",
+    category: "",
     address: "",
     email: "",
     phone: "",
-    imgurl: "",
+    profileImg: "",
   });
   function inputHandler(event) {
     let { name, value } = event.target;
@@ -33,11 +30,11 @@ const AddNewMerchant = () => {
     fname: "",
     lname: "",
     username: "",
-    type: "",
+    category: "",
     email: "",
     address: "",
     phone: "",
-    imgurl: "",
+    profileImg: "",
   });
 
   let dispatch = useDispatch();
@@ -46,32 +43,21 @@ const AddNewMerchant = () => {
     e.preventDefault();
     if (validateInputs()) {
       let newData = { ...datas };
-      newData.id = parseInt(
-        Math.random() *
-          newData.fname.charCodeAt(0) *
-          newData.lname.charCodeAt(newData.lname.length - 1)
-      );
-      newData["bids"] = [];
-      const lookForMerchant = merchants.some(
-        (merchant) => merchant.username === newData.username
-      );
-      // console.log(lookForMerchant);
-      if (!lookForMerchant) {
-        dispatch(addNewMerchant(newData));
-        setDatas({
-          fname: "",
-          lname: "",
-          username: "",
-          address: "",
-          type: "",
-          email: "",
-          phone: "",
-          imgurl: "",
-        });
-        alert("Merchant created");
-      } else {
-        alert("Merchant Username already exists");
-      }
+      delete newData.fname;
+      delete newData.lname;
+      newData["name"] = datas.fname + " " + datas.lname;
+      // console.log(newData);
+      dispatch(createMerchantAsync(newData));
+      setDatas({
+        fname: "",
+        lname: "",
+        username: "",
+        address: "",
+        category: "",
+        email: "",
+        phone: "",
+        profileImg: "",
+      });
     }
   };
   const validateInputs = () => {
@@ -118,13 +104,13 @@ const AddNewMerchant = () => {
       isValid = false;
     }
 
-    if (!datas.type.trim()) {
-      errors.type = "Merchant Type is required";
+    if (!datas.category.trim()) {
+      errors.category = "Merchant Type is required";
       isValid = false;
     }
 
-    if (!datas.imgurl.trim()) {
-      errors.imgurl = "Image URL is required";
+    if (!datas.profileImg.trim()) {
+      errors.profileImg = "Image URL is required";
       isValid = false;
     }
 
@@ -188,11 +174,13 @@ const AddNewMerchant = () => {
             <div className="input">
               <input
                 type="text"
-                name="type"
+                name="category"
                 onChange={inputHandler}
-                value={datas.type || ""}
+                value={datas.category || ""}
               />
-              {errors.type && <span className="error">{errors.type}</span>}
+              {errors.category && (
+                <span className="error">{errors.category}</span>
+              )}
             </div>
           </div>
           <div className="add-input">
@@ -239,11 +227,13 @@ const AddNewMerchant = () => {
             <div className="input">
               <input
                 type="text"
-                name="imgurl"
+                name="profileImg"
                 onChange={inputHandler}
-                value={datas.imgurl || ""}
+                value={datas.profileImg || ""}
               />
-              {errors.imgurl && <span className="error">{errors.imgurl}</span>}
+              {errors.profileImg && (
+                <span className="error">{errors.profileImg}</span>
+              )}
             </div>
           </div>
 
@@ -262,22 +252,22 @@ const AddNewMerchant = () => {
                 setDatas({
                   fname: "",
                   lname: "",
-                  type: "",
+                  category: "",
                   address: "",
                   email: "",
                   phone: "",
-                  imgurl: "",
+                  profileImg: "",
                 });
 
                 setErrors({
                   fname: "",
                   lname: "",
                   username: "",
-                  type: "",
+                  category: "",
                   email: "",
                   address: "",
                   phone: "",
-                  imgurl: "",
+                  profileImg: "",
                 });
               }}
             >

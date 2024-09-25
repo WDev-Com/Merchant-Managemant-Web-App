@@ -3,21 +3,24 @@ import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import "../../CSS/operate-form.css";
-import {
-  confirmBid,
-  getBidsById,
-  selectBidsById,
-  selectMerchant,
-} from "../oprations/operationSlice";
+
 import MDashBoardNavbar from "../merchant/MNavbar";
+import {
+  fetchBidByIdAsync,
+  selectCurrentBid,
+  selectCurrentMerchant,
+} from "../oprations/operationSlice";
+import { confirmBidAsync } from "../merchant/merchantSilce";
 
 const BiddingForm = () => {
   let { mid, bid } = useParams();
+  // console.log(mid);
+  // console.log(bid);
   let dispatch = useDispatch();
-  let currBid = useSelector(selectBidsById);
-  let currMerchant = useSelector(selectMerchant);
-  // console.log(currMerchant);
+  let currBid = useSelector(selectCurrentBid);
+  // console.log(currBid);
   const [bidData, setBidData] = useState({
+    merchantId: "",
     bidId: "",
     assetType: "",
     yearlyReturn: 0,
@@ -33,18 +36,21 @@ const BiddingForm = () => {
 
   useEffect(() => {
     if (bid) {
-      dispatch(getBidsById(Number(bid)));
+      dispatch(fetchBidByIdAsync(bid));
     }
   }, [bid, dispatch]);
 
   useEffect(() => {
-    if (currBid && currBid.bidId) {
-      setBidData({
+    if (currBid && currBid._id) {
+      setBidData((prevData) => ({
+        ...prevData,
         ...currBid,
+        merchantId: mid,
+        bidId: currBid._id,
         status: currBid.status || "Under Review",
-      });
+      }));
     }
-  }, [currBid]);
+  }, [currBid, mid]);
 
   const inputHandler = (event) => {
     const { name, value } = event.target;
@@ -96,31 +102,17 @@ const BiddingForm = () => {
   const addBid = (e) => {
     e.preventDefault();
     if (validateInputs()) {
-      // Check if currMerchant is defined
-      if (currMerchant && currMerchant.bids) {
-        // Check if the merchant has already bid on this bid
-        const existingBid = currMerchant.bids.find(
-          (b) => b.bidId === bidData.bidId
-        );
-        if (existingBid) {
-          alert("You have already placed a bid on this item.");
-        } else {
-          dispatch(confirmBid({ mid: Number(mid), bid: bidData }));
-          setBidData({
-            bidId: "",
-            assetType: "",
-            yearlyReturn: 0,
-            holdingPeriod: 0,
-            ask: 0,
-            bid: "",
-            status: "",
-          });
-          alert("Bid created");
-        }
-      } else {
-        // Handle case where currMerchant or currMerchant.bids is undefined
-        console.error("currMerchant or currMerchant.bids is undefined");
-      }
+      // console.log(bidData);
+      dispatch(confirmBidAsync({ bidData }));
+      setBidData({
+        bidId: "",
+        assetType: "",
+        yearlyReturn: 0,
+        holdingPeriod: 0,
+        ask: 0,
+        bid: "",
+        status: "",
+      });
     }
   };
 
@@ -129,7 +121,7 @@ const BiddingForm = () => {
       <MDashBoardNavbar />
       <div className="add-opreation">
         <div className="add-top">
-          <Link to={`/mDashBoard/${mid}`}>
+          <Link to={`/mDashBoard`}>
             <button>
               <i className="fa fa-arrow-left" aria-hidden="true"></i>
               Back
@@ -148,7 +140,22 @@ const BiddingForm = () => {
                 name="bidId"
                 onChange={inputHandler}
                 onBlur={handleBlur}
-                value={bidData.bidId || ""}
+                value={bidData._id || ""}
+                readOnly
+              />
+            </div>
+          </div>
+          <div className="add-input">
+            <div className="input-label">
+              <label htmlFor="assetName">Asset Name</label>
+            </div>
+            <div className="input">
+              <input
+                type="text"
+                name="assetName"
+                onChange={inputHandler}
+                onBlur={handleBlur}
+                value={bidData.assetName || ""}
                 readOnly
               />
             </div>

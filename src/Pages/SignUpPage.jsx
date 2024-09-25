@@ -13,6 +13,4 @@ const SignUpPage = (props) => {
   );
 };
 
-SignUpPage.propTypes = {};
-
 export default SignUpPage;

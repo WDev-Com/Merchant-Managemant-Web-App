@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "../../CSS/navbar.css";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
-import { logout } from "../auth/Authslice";
+import { logout, logoutUserAsync } from "../auth/Authslice";
 import { useDispatch } from "react-redux";
 
 function classNames(...classes) {
@@ -113,9 +113,7 @@ const InchargeNavbar = () => {
             <button
               id="logout"
               onClick={() => {
-                dispatch(logout());
-                // window.localStorage.removeItem("adminauth");
-                navigate("/#home");
+                dispatch(logoutUserAsync());
               }}
             >
               Logout

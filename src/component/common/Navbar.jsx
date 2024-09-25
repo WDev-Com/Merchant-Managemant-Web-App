@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import "../../CSS/navbar.css";
 import { Link } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
-
+import { useDispatch } from "react-redux";
+import { signUp } from "../auth/Authslice";
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -17,7 +18,7 @@ const Navbar = () => {
   const [toggle, setToggle] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const navbarRef = useRef(null);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 1300) {
@@ -108,7 +109,14 @@ const Navbar = () => {
               <button id="sign-in">Sign In</button>
             </Link>
             <Link to={"/signuppage"}>
-              <button id="sign-up">Sign Up</button>
+              <button
+                id="sign-up"
+                onClick={() => {
+                  dispatch(signUp());
+                }}
+              >
+                Sign Up
+              </button>
             </Link>
           </div>
         </div>
