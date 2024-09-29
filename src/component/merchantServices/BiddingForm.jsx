@@ -239,23 +239,6 @@ const BiddingForm = () => {
 
           <div className="add-m-btn">
             <button onClick={addBid}>Confirm</button>
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                setBidData({
-                  bidId: "",
-                  assetType: "",
-                  yearlyReturn: 0,
-                  holdingPeriod: 0,
-                  ask: 0,
-                  bid: "",
-                  status: "",
-                });
-                setErrors({});
-              }}
-            >
-              Clear
-            </button>
           </div>
         </form>
       </div>

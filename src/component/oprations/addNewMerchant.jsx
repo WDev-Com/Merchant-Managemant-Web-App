@@ -26,6 +26,32 @@ const AddNewMerchant = () => {
     });
   }
 
+  const imageHandler = (event) => {
+    let { name, value, type, files } = event.target;
+
+    if (type === "file") {
+      let file = files[0];
+      if (file.size > 80 * 1024) {
+        alert("Image size exceeds 80 KB");
+        return;
+      }
+
+      let reader = new FileReader();
+      reader.onloadend = () => {
+        setDatas((preVal) => ({
+          ...preVal,
+          profileImg: reader.result,
+        }));
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setDatas((preVal) => ({
+        ...preVal,
+        [name]: value,
+      }));
+    }
+  };
+
   const [errors, setErrors] = useState({
     fname: "",
     lname: "",
@@ -60,6 +86,7 @@ const AddNewMerchant = () => {
       });
     }
   };
+
   const validateInputs = () => {
     let isValid = true;
     let errors = {};
@@ -117,6 +144,7 @@ const AddNewMerchant = () => {
     setErrors(errors);
     return isValid;
   };
+
   return (
     <>
       <InchargeNavbar />
@@ -230,21 +258,21 @@ const AddNewMerchant = () => {
               {errors.phone && <span className="error">{errors.phone}</span>}
             </div>
           </div>
+
           <div className="add-input">
-            <label htmlFor="">Image URL</label>{" "}
+            <label htmlFor="">Image URL</label>
             <div className="input">
               <input
-                type="text"
+                type="file"
+                accept="image/*"
                 name="profileImg"
-                onChange={inputHandler}
-                value={datas.profileImg || ""}
+                onChange={imageHandler}
               />
               {errors.profileImg && (
                 <span className="error">{errors.profileImg}</span>
               )}
             </div>
           </div>
-
           <div className="add-m-btn">
             <button
               onClick={(e) => {

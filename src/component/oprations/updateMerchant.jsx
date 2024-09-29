@@ -35,7 +35,34 @@ const UpdateMerchant = () => {
       };
     });
   }
+  const imageHandler = (event) => {
+    let { name, value, type, files } = event.target;
 
+    if (type === "file") {
+      let file = files[0];
+      if (file.size > 80 * 1024) {
+        setErrors((prev) => ({
+          ...prev,
+          profileImg: "Image size exceeds 80 KB",
+        }));
+        return;
+      }
+
+      let reader = new FileReader();
+      reader.onloadend = () => {
+        setDatas((preVal) => ({
+          ...preVal,
+          profileImg: reader.result,
+        }));
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setDatas((preVal) => ({
+        ...preVal,
+        [name]: value,
+      }));
+    }
+  };
   const [errors, setErrors] = useState({
     fname: "",
     lname: "",
@@ -262,37 +289,18 @@ const UpdateMerchant = () => {
             <label htmlFor="">Image URL</label>
             <div className="input">
               <input
-                type="text"
+                type="file"
+                accept="image/*"
                 name="profileImg"
-                onChange={inputHandler}
-                onBlur={handleBlur}
-                value={datas.profileImg}
+                onChange={imageHandler}
               />
               {errors.profileImg && (
                 <span className="error">{errors.profileImg}</span>
               )}
             </div>
           </div>
-
           <div className="add-m-btn">
             <button onClick={handleUpdate}>Update Merchant</button>
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                setDatas({
-                  fname: "",
-                  lname: "",
-                  address: "",
-                  category: "",
-                  email: "",
-                  phone: "",
-                  profileImg: "",
-                });
-                setErrors({});
-              }}
-            >
-              Clear
-            </button>
           </div>
         </form>
       </div>
