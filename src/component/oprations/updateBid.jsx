@@ -90,6 +90,39 @@ const updateBidPage = () => {
     return isValid;
   };
 
+  const handleBlur = (event) => {
+    const { name, value } = event.target;
+    let error = "";
+    if (name === "assetType" && !value.trim()) {
+      error = "Asset Type is required";
+    } else if (name === "assetName" || !value.trim()) {
+      error = "Asset Name is required";
+    } else if (name === "holdingPeriod") {
+      if (!value.trim()) {
+        error = "Holding Period is required";
+      } else if (value <= 0) {
+        error = "Holding Period should be greater than 0";
+      }
+    } else if (name === "holdingPeriod") {
+      if (!value.trim()) {
+        error = "Holding Period is required";
+      } else if (value <= 0) {
+        error = "Holding Period should be greater than 0";
+      }
+    } else if (name === "ask") {
+      if (!value.trim()) {
+        error = "Ask is required";
+      } else if (value <= 0) {
+        error = "Ask should be greater than 0";
+      }
+    }
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: error,
+    }));
+  };
+
   const updateBidMeth = (e) => {
     e.preventDefault();
     if (validateInputs()) {
@@ -140,13 +173,21 @@ const updateBidPage = () => {
               <label htmlFor="assetType">Asset Type</label>
             </div>
             <div className="input">
-              <input
-                type="text"
-                min="1"
+              <select
                 name="assetType"
                 onChange={inputHandler}
+                onBlur={handleBlur}
                 value={bidData.assetType}
-              />
+              >
+                <option value="">Select an asset type</option>
+                <option value="Raw Materials Stock">Raw Materials Stock</option>
+                <option value="Investment Portfolio">
+                  Investment Portfolio
+                </option>
+                <option value="Real Estate">Real Estate</option>
+                <option value="Digital Holdings">Digital Holdings</option>
+                <option value="Supplier Contracts">Supplier Contracts</option>
+              </select>
               {errors.assetType && (
                 <span className="error">{errors.assetType}</span>
               )}

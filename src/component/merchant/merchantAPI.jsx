@@ -1,11 +1,21 @@
 import { toast } from "react-toastify";
-
+import { loadStoredToken } from "../auth/Authslice";
+// let tok = JSON.parse(localStorage.getItem("token"));
+// let token = tok && tok.token ? tok.token : "";
+// // console.log(token);
 ////////////////////// USED
 export function getMerchantByUsername(username) {
   return new Promise(async (resolve, reject) => {
     try {
       const response = await fetch(
-        `http://localhost:8081/merchant/getMerchantByUsername?username=${username}`
+        `http://localhost:8080/merchant/getMerchantByUsername?username=${username}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${loadStoredToken().token}`,
+            "Content-Type": "application/json",
+          },
+        }
       );
       const data = await response.json();
       //   console.log("API response: ", data); // Log full response from the API
@@ -24,7 +34,14 @@ export function getBidsByMerchantId(merchantId) {
   return new Promise(async (resolve, reject) => {
     try {
       const response = await fetch(
-        `http://localhost:8081/merchant/getMyBids?merchantId=${merchantId}`
+        `http://localhost:8080/merchant/getMyBids?merchantId=${merchantId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${loadStoredToken().token}`,
+            "Content-Type": "application/json",
+          },
+        }
       );
       const data = await response.json();
       //   console.log(data);
@@ -46,8 +63,14 @@ export function deleteMerchantBid(merchantId, bidId) {
   return new Promise(async (resolve, reject) => {
     try {
       const response = await fetch(
-        `http://localhost:8081/merchant/deleteMerchantBid?merchantId=${merchantId}&bidId=${bidId}`,
-        { method: "DELETE" }
+        `http://localhost:8080/merchant/deleteMerchantBid?merchantId=${merchantId}&bidId=${bidId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${loadStoredToken().token}`,
+            "Content-Type": "application/json",
+          },
+        }
       );
       const data = await response.json();
       if (response.ok) {
@@ -63,14 +86,18 @@ export function deleteMerchantBid(merchantId, bidId) {
 }
 
 export function confirmBid(bidData) {
+  // console.log(bidData);
   return new Promise(async (resolve, reject) => {
     try {
       const response = await fetch(
-        `http://localhost:8081/merchant/confirmBid`,
+        `http://localhost:8080/merchant/confirmBid`,
         {
           method: "POST",
           body: JSON.stringify(bidData),
-          headers: { "content-type": "application/json" },
+          headers: {
+            Authorization: `Bearer ${loadStoredToken().token}`,
+            "Content-Type": "application/json",
+          },
         }
       );
       const data = await response.json();

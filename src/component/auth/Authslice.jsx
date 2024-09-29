@@ -8,7 +8,12 @@ const initialState = {
   userInfo: null,
   error: null,
 };
-
+// Check if a token exists in localStorage when the app loads
+export const loadStoredToken = () => {
+  const storedToken = JSON.parse(localStorage.getItem("token"));
+  const storedUserInfo = JSON.parse(localStorage.getItem("userInfo"));
+  return { token: storedToken?.token, userInfo: storedUserInfo };
+};
 export const signUpUserAsync = createAsyncThunk(
   "auth/signUpUser",
   async (userData) => {
@@ -85,6 +90,15 @@ const AuthSlice = createSlice({
         state.status = "idle";
         state.token = action.payload.token;
         state.userInfo = action.payload.userInfo;
+        // Store token and userInfo in localStorage after successful login
+        localStorage.setItem(
+          "token",
+          JSON.stringify({ token: action.payload.token })
+        );
+        localStorage.setItem(
+          "userInfo",
+          JSON.stringify(action.payload.userInfo)
+        );
       })
 
       .addCase(loginUserAsync.rejected, (state, action) => {

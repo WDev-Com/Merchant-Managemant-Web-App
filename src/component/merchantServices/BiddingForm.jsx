@@ -105,8 +105,9 @@ const BiddingForm = () => {
       // console.log(bidData);
       dispatch(confirmBidAsync({ bidData }));
       setBidData({
-        bidId: "",
+        assetName: "",
         assetType: "",
+        bidId: "",
         yearlyReturn: 0,
         holdingPeriod: 0,
         ask: 0,

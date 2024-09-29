@@ -67,9 +67,11 @@ export const deleteMerchantBidAsync = createAsyncThunk(
 export const changeBidStatusAsync = createAsyncThunk(
   "admin/changeBidStatus",
   async ({ merchantId, bidId, status }, { rejectWithValue }) => {
+    // console.log(merchantId, bidId, status);
     try {
-      await updateBidStatus(merchantId, bidId, status);
-      return { merchantId, bidId, status }; // Return payload for the reducer
+      const response = await updateBidStatus(merchantId, bidId, status);
+      // console.log(response);
+      return response; // Return payload for the reducer
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -157,10 +159,11 @@ const merchantSlice = createSlice({
       .addCase(changeBidStatusAsync.fulfilled, (state, action) => {
         state.state = false;
         const { merchantId, bidId, status } = action.payload;
-        // console.log(merchantId, bidId, status);
+
         let ITEMind = state.bids.findIndex(
           (ele) => ele.bidId == bidId && ele.merchantId == merchantId
         );
+
         state.bids[ITEMind]["status"] = status;
       })
       .addCase(changeBidStatusAsync.rejected, (state, action) => {

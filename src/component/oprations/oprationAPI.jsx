@@ -1,12 +1,22 @@
-const API_BASE_URL = "http://localhost:8081/admin";
+const API_BASE_URL = "http://localhost:8080/admin";
 import { toast } from "react-toastify";
+import { loadStoredToken } from "../auth/Authslice";
+
+// let tok = await JSON.parse(localStorage.getItem("token"));
+// let token = tok && tok.token ? tok.token : "";
+
+// console.log("token", token);
 // 1. Add Merchant ## DONE
 export const addMerchant = (merchantData) => {
   return new Promise(async (resolve, reject) => {
     try {
       const response = await fetch(`${API_BASE_URL}/addMerchant`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+
+        headers: {
+          Authorization: `Bearer ${loadStoredToken().token}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(merchantData),
       });
 
@@ -40,7 +50,10 @@ export const addNewBid = (bidData) => {
     try {
       const response = await fetch(`${API_BASE_URL}/addNewBid`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${loadStoredToken().token}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(bidData),
       });
 
@@ -76,6 +89,10 @@ export const deleteMerchantById = (merchantId) => {
         `${API_BASE_URL}/removeMercant/${merchantId}`,
         {
           method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${loadStoredToken().token}`,
+            "Content-Type": "application/json",
+          },
         }
       );
       if (!response.ok) {
@@ -91,13 +108,16 @@ export const deleteMerchantById = (merchantId) => {
     }
   });
 };
-
 // 4. Remove Bid By ID ## DONE
 export const removeBidById = (bidId) => {
   return new Promise(async (resolve, reject) => {
     try {
       const response = await fetch(`${API_BASE_URL}/removeBid/${bidId}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${loadStoredToken().token}`,
+          "Content-Type": "application/json",
+        },
       });
       if (!response.ok) {
         toast.error(`HTTP error! status: ${response.status}`);
@@ -124,7 +144,10 @@ export const updateMerchantById = (merchantId, updatedData) => {
         `${API_BASE_URL}/updateMerchant/${merchantId}`,
         {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            Authorization: `Bearer ${loadStoredToken().token}`,
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify(updatedData),
         }
       );
@@ -151,7 +174,10 @@ export const updateBidById = (bidId, updatedData) => {
       // console.log(updatedData);
       const response = await fetch(`${API_BASE_URL}/updateBid/${bidId}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${loadStoredToken().token}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(updatedData),
       });
       if (!response.ok) {
@@ -177,6 +203,10 @@ export const getMerchantById = (merchantId) => {
         `${API_BASE_URL}/getMerchantById/${merchantId}`,
         {
           method: "GET",
+          headers: {
+            Authorization: `Bearer ${loadStoredToken().token}`,
+            "Content-Type": "application/json",
+          },
         }
       );
       if (!response.ok) {
@@ -199,6 +229,10 @@ export const getMerchantsByPagination = (page, limit) => {
         `${API_BASE_URL}/getAllMerchant?page=${page}&limit=${limit}`,
         {
           method: "GET",
+          headers: {
+            Authorization: `Bearer ${loadStoredToken().token}`,
+            "Content-Type": "application/json",
+          },
         }
       );
       if (!response.ok) {
@@ -222,6 +256,10 @@ export const getBidById = (bidId) => {
     try {
       const response = await fetch(`${API_BASE_URL}/getBidById/${bidId}`, {
         method: "GET",
+        headers: {
+          Authorization: `Bearer ${loadStoredToken().token}`,
+          "Content-Type": "application/json",
+        },
       });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -243,6 +281,10 @@ export const getAllBidsByPagination = (page = 1, limit = 10) => {
         `${API_BASE_URL}/getAllBids?page=${page}&limit=${limit}`,
         {
           method: "GET",
+          headers: {
+            Authorization: `Bearer ${loadStoredToken().token}`,
+            "Content-Type": "application/json",
+          },
         }
       );
 
@@ -268,6 +310,10 @@ export const updateBidStatus = (merchantId, bidId, status) => {
         `${API_BASE_URL}/updateBidStatus?merchantId=${merchantId}&bidId=${bidId}&status=${status}`,
         {
           method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${loadStoredToken().token}`,
+            "Content-Type": "application/json",
+          },
         }
       );
       if (!response.ok) {

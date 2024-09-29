@@ -1,10 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export function signUpUser(userData) {
   // console.log("From API: ", userData);
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await fetch(`http://localhost:8081/auth/signup`, {
+      const response = await fetch(`http://localhost:8080/auth/signup`, {
         method: "POST",
         body: JSON.stringify(userData),
         headers: { "content-type": "application/json" },
@@ -30,7 +31,7 @@ export function loginUser(userData) {
   // console.log("From API: ", userData);
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await fetch(`http://localhost:8081/auth/login`, {
+      const response = await fetch(`http://localhost:8080/auth/login`, {
         method: "POST",
         body: JSON.stringify(userData),
         headers: { "content-type": "application/json" },
@@ -55,11 +56,13 @@ export function loginUser(userData) {
 export function logoutUser() {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await fetch(`http://localhost:8081/auth/logout`);
+      const response = await fetch(`http://localhost:8080/auth/logout`);
       const data = await response.json();
 
       if (response.ok) {
         localStorage.removeItem("token");
+        localStorage.removeItem("userInfo");
+
         toast.success("Logout successfully");
       } else {
         toast.error("Logout Failed");

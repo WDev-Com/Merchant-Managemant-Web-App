@@ -15,6 +15,7 @@ const MDashBoardNavbar = () => {
   const [showMenu, setShowMenu] = useState(false);
   const navbarRef = useRef(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 1300) {
@@ -97,6 +98,7 @@ const MDashBoardNavbar = () => {
               id="logout"
               onClick={() => {
                 dispatch(logoutUserAsync());
+                navigate("/#home");
               }}
             >
               Logout

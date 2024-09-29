@@ -170,14 +170,22 @@ const AddNewMerchant = () => {
             </div>
           </div>
           <div className="add-input">
-            <label htmlFor="">Category</label> <div className="input"></div>
+            <label htmlFor="category">Category</label>
             <div className="input">
-              <input
-                type="text"
+              <select
                 name="category"
                 onChange={inputHandler}
                 value={datas.category || ""}
-              />
+              >
+                <option value="">Select a category</option>
+                <option value="Inventory Management">
+                  Inventory Management
+                </option>
+                <option value="Financial Assets">Financial Assets</option>
+                <option value="Property">Property</option>
+                <option value="Digital Assets">Digital Assets</option>
+                <option value="Vendor and Supplier">Vendor and Supplier</option>
+              </select>
               {errors.category && (
                 <span className="error">{errors.category}</span>
               )}

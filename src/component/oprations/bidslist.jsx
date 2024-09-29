@@ -9,6 +9,7 @@ import {
   selectBidsTotalCount,
 } from "./operationSlice";
 import Pagination from "../common/Pagination";
+import BidsComponent from "./bidsComponent";
 
 const bidslist = () => {
   let navigate = useNavigate();
@@ -19,7 +20,7 @@ const bidslist = () => {
   const totalBids = useSelector(selectBidsTotalCount);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
+  const itemsPerPage = 5;
 
   useEffect(() => {
     dispatch(
@@ -34,10 +35,20 @@ const bidslist = () => {
     setCurrentPage(page);
   };
 
+  const handleEdit = (bidID) => {
+    navigate(`/Updatebid/${bidID}`);
+  };
+  const handleDelete = (bidID) => {
+    let val = confirm("Are you sure you want to delete this?");
+    if (val) {
+      dispatch(deleteBidAsync(bidID));
+    }
+  };
+
   return (
     <>
       <InchargeNavbar />
-      <div className="dashboard">
+      {/* <div className="dashboard">
         <div className="list-top">
           <h1>List of Asset</h1>
           <Link to={"/addNewbid"}>
@@ -99,7 +110,17 @@ const bidslist = () => {
           itemsPerPage={itemsPerPage}
           onPageChange={handlePageChange}
         />
-      </div>
+      </div> */}
+      <BidsComponent
+        data={data}
+        totalItems={data.length} // Since all bids are already loaded
+        itemsPerPage={10} // Display all bids or set your preferred limit
+        currentPage={1} // Static as no pagination in this case
+        onPageChange={handlePageChange}
+        handleEdit={handleEdit}
+        handleDelete={handleDelete}
+        showAddNewButton={false}
+      />
     </>
   );
 };

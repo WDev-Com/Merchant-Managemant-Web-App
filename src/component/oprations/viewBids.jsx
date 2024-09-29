@@ -13,7 +13,6 @@ import {
   getBidsByMerchantIdAsync,
   selectMerchantBids,
 } from "../merchant/merchantSilce";
-
 import BidsComponent from "./bidsComponent";
 
 const ViewMerchantBids = () => {
@@ -40,23 +39,27 @@ const ViewMerchantBids = () => {
     // Handle page change logic here if necessary
   };
 
-  const handleEdit = (bidId) => {
-    // Handle bid edit logic here
-  };
+  const handleBidStatusChange = () => {};
 
-  const handleBidStatusChange = (merchantId, bidId, status) => {
+  const handleAccept = (merchantId, bidId, status) => {
     dispatch(changeBidStatusAsync({ merchantId, bidId, status }));
+    // console.log(merchantId, bidId, status);
     setBids((prevBids) =>
       prevBids.map((bid) => (bid.bidId === bidId ? { ...bid, status } : bid))
     );
   };
 
-  const handleDelete = (bidId) => {
-    // Handle bid delete logic here if necessary
+  const handleReject = (merchantId, bidId, status) => {
+    dispatch(changeBidStatusAsync({ merchantId, bidId, status }));
+    // console.log(merchantId, bidId, status);
+    setBids((prevBids) =>
+      prevBids.map((bid) => (bid.bidId === bidId ? { ...bid, status } : bid))
+    );
   };
-
+  // console.log(bids);
   return (
     <>
+      <InchargeNavbar />
       <div className="add-top">
         <Link to={`/merchantlist`}>
           <button onClick={() => dispatch(clearCurrentMerchantBids())}>
@@ -73,8 +76,8 @@ const ViewMerchantBids = () => {
         itemsPerPage={10} // Display all bids or set your preferred limit
         currentPage={1} // Static as no pagination in this case
         onPageChange={handlePageChange}
-        handleEdit={handleEdit}
-        handleDelete={handleDelete}
+        handleAccept={handleAccept}
+        handleReject={handleReject}
         showAddNewButton={false} // Hide the "Add New" button for this view
       />
     </>

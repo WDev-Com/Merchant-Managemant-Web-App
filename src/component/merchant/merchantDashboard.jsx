@@ -4,7 +4,7 @@ import "../../CSS/merchantProfile.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { selectUserInfo } from "../auth/Authslice";
+import { loadStoredToken, selectUserInfo } from "../auth/Authslice";
 import {
   getMerchantByUsernameAsync,
   selectCurrMerchant,
@@ -19,13 +19,20 @@ const merchantDashboard = () => {
   const dispatch = useDispatch();
   const currMerchant = useSelector(selectCurrMerchant);
   // console.log(currMerchant);
+  let validation = loadStoredToken();
   const userInfo = useSelector(selectUserInfo);
   useEffect(() => {
-    if (userInfo.username) {
-      dispatch(getMerchantByUsernameAsync(userInfo.username));
-    }
-  }, [userInfo.username, dispatch]);
+    console.log("Fetching Data....");
+
+    dispatch(getMerchantByUsernameAsync(validation.userInfo.username));
+  }, []);
   // console.log(currMerchant._id);
+  const getValidImageUrl = (url) => {
+    if (!url.endsWith(".png") && !url.endsWith(".jpg")) {
+      return url + ".jpg"; // Default to .jpg if no valid extension found
+    }
+    return url;
+  };
   return (
     <>
       <MDashBoardNavbar />

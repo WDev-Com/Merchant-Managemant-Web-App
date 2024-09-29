@@ -77,17 +77,7 @@ const InchargeNavbar = () => {
             ))}
           </ul>
         </div>
-        <div className="auth">
-          <button
-            id="logout"
-            onClick={() => {
-              // window.localStorage.removeItem("adminauth");
-              navigate("/#home");
-            }}
-          >
-            Logout
-          </button>
-        </div>
+
         {toggle && (
           <div className="toggle-button" onClick={handleToggleClick}>
             <i
@@ -114,6 +104,7 @@ const InchargeNavbar = () => {
               id="logout"
               onClick={() => {
                 dispatch(logoutUserAsync());
+                navigate("/#home");
               }}
             >
               Logout

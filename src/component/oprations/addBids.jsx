@@ -32,48 +32,21 @@ const AddNewBids = () => {
     }));
   };
 
-  const handleBlur = (event) => {
-    const { name, value } = event.target;
-    let error = "";
-    if (name === "assetType" && !value.trim()) {
-      error = "Asset Type is required";
-    } else if (name === "assetName" || !value.trim()) {
-      error = "Asset Name is required";
-    } else if (name === "holdingPeriod") {
-      if (!value.trim()) {
-        error = "Holding Period is required";
-      } else if (value <= 0) {
-        error = "Holding Period should be greater than 0";
-      }
-    } else if (name === "holdingPeriod") {
-      if (!value.trim()) {
-        error = "Holding Period is required";
-      } else if (value <= 0) {
-        error = "Holding Period should be greater than 0";
-      }
-    } else if (name === "ask") {
-      if (!value.trim()) {
-        error = "Ask is required";
-      } else if (value <= 0) {
-        error = "Ask should be greater than 0";
-      }
-    }
-
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: error,
-    }));
-  };
-
   const validateInputs = () => {
     let isValid = true;
     let errors = {};
+
     if (!bidData.assetType.trim()) {
       errors.assetType = "Asset Type is required";
       isValid = false;
     }
 
-    if (!bidData.yearlyReturn.trim()) {
+    if (!bidData.assetName.trim()) {
+      errors.assetName = "Asset Name is required";
+      isValid = false;
+    }
+
+    if (!bidData.yearlyReturn) {
       errors.yearlyReturn = "Yearly Return is required";
       isValid = false;
     } else if (bidData.yearlyReturn <= 0) {
@@ -81,7 +54,7 @@ const AddNewBids = () => {
       isValid = false;
     }
 
-    if (!bidData.holdingPeriod.trim()) {
+    if (!bidData.holdingPeriod) {
       errors.holdingPeriod = "Holding Period is required";
       isValid = false;
     } else if (bidData.holdingPeriod <= 0) {
@@ -89,7 +62,7 @@ const AddNewBids = () => {
       isValid = false;
     }
 
-    if (!bidData.ask.trim()) {
+    if (!bidData.ask) {
       errors.ask = "Ask is required";
       isValid = false;
     } else if (bidData.ask <= 0) {
@@ -140,11 +113,10 @@ const AddNewBids = () => {
                 type="text"
                 name="assetName"
                 onChange={inputHandler}
-                onBlur={handleBlur}
                 value={bidData.assetName}
               />
-              {errors.assetType && (
-                <span className="error">{errors.assetType}</span>
+              {errors.assetName && (
+                <span className="error">{errors.assetName}</span>
               )}
             </div>
           </div>
@@ -153,13 +125,20 @@ const AddNewBids = () => {
               <label htmlFor="assetType">Asset Type</label>
             </div>
             <div className="input">
-              <input
-                type="text"
+              <select
                 name="assetType"
                 onChange={inputHandler}
-                onBlur={handleBlur}
                 value={bidData.assetType}
-              />
+              >
+                <option value="">Select an asset type</option>
+                <option value="Raw Materials Stock">Raw Materials Stock</option>
+                <option value="Investment Portfolio">
+                  Investment Portfolio
+                </option>
+                <option value="Real Estate">Real Estate</option>
+                <option value="Digital Holdings">Digital Holdings</option>
+                <option value="Supplier Contracts">Supplier Contracts</option>
+              </select>
               {errors.assetType && (
                 <span className="error">{errors.assetType}</span>
               )}
@@ -174,7 +153,6 @@ const AddNewBids = () => {
                 type="number"
                 name="yearlyReturn"
                 onChange={inputHandler}
-                onBlur={handleBlur}
                 value={bidData.yearlyReturn}
               />
               {errors.yearlyReturn && (
@@ -191,7 +169,6 @@ const AddNewBids = () => {
                 type="number"
                 name="holdingPeriod"
                 onChange={inputHandler}
-                onBlur={handleBlur}
                 value={bidData.holdingPeriod}
               />
               {errors.holdingPeriod && (
@@ -208,7 +185,6 @@ const AddNewBids = () => {
                 type="number"
                 name="ask"
                 onChange={inputHandler}
-                onBlur={handleBlur}
                 value={bidData.ask}
               />
               {errors.ask && <span className="error">{errors.ask}</span>}

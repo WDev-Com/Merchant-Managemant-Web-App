@@ -1,12 +1,20 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import { selectLoggedInUser, selectUserInfo } from "./Authslice";
+import { loadStoredToken, selectUserInfo } from "./Authslice";
 
 const ProtectedUser = ({ children }) => {
+  const validation = loadStoredToken(); // Load token from localStorage
+  // console.log(validation);
+
   const userInfo = useSelector(selectUserInfo);
-  // console.log(userInfo);
-  if (!userInfo || (!userInfo.username && userInfo.role == "user")) {
+
+  // Check if user is authenticated and has the 'user' role
+  if (
+    !validation ||
+    !validation.userInfo ||
+    validation.userInfo.role !== "user"
+  ) {
     return <Navigate to="/loginpage" replace={true} />;
   }
 

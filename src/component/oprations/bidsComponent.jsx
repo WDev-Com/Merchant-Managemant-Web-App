@@ -10,10 +10,11 @@ const BidsComponent = ({
   onPageChange,
   handleEdit,
   handleDelete,
+  handleAccept,
+  handleReject,
   showAddNewButton = true,
 }) => {
   let navigate = useNavigate();
-  console.log(data);
   return (
     <>
       <div className="dashboard">
@@ -36,6 +37,7 @@ const BidsComponent = ({
               <th>Holding Period</th>
               <th>Ask</th>
               <th>Actions</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
@@ -49,11 +51,34 @@ const BidsComponent = ({
                   <td datatitle="ROI">{bid.yearlyReturn}</td>
                   <td datatitle="Holding Period">{bid.holdingPeriod}</td>
                   <td datatitle="Ask">{bid.ask}</td>
+                  <td datatitle="Status">{bid.status}</td>
                   <td datatitle="Action" className="btn-action">
-                    <button onClick={() => handleEdit(bid._id)}>Edit</button> |
-                    <button onClick={() => handleDelete(bid._id)}>
-                      Delete
-                    </button>
+                    {handleEdit && (
+                      <button onClick={() => handleEdit(bid._id)}>Edit</button>
+                    )}
+                    {handleDelete && (
+                      <button onClick={() => handleDelete(bid._id)}>
+                        Delete
+                      </button>
+                    )}
+                    {handleAccept && (
+                      <button
+                        onClick={() =>
+                          handleAccept(bid.merchantId, bid.bidId, "accepted")
+                        }
+                      >
+                        Accept
+                      </button>
+                    )}
+                    {handleReject && (
+                      <button
+                        onClick={() =>
+                          handleReject(bid.merchantId, bid.bidId, "rejected")
+                        }
+                      >
+                        Reject
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
