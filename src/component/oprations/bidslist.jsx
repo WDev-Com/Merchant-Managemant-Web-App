@@ -48,7 +48,8 @@ const bidslist = () => {
   return (
     <>
       <InchargeNavbar />
-      {/* <div className="dashboard">
+      {/* The Work in Progress for customizing the logic in different component*/}
+      <div className="dashboard">
         <div className="list-top">
           <h1>List of Asset</h1>
           <Link to={"/addNewbid"}>
@@ -110,8 +111,8 @@ const bidslist = () => {
           itemsPerPage={itemsPerPage}
           onPageChange={handlePageChange}
         />
-      </div> */}
-      <BidsComponent
+      </div>
+      {/* <BidsComponent
         data={data}
         totalItems={data.length} // Since all bids are already loaded
         itemsPerPage={10} // Display all bids or set your preferred limit
@@ -120,7 +121,7 @@ const bidslist = () => {
         handleEdit={handleEdit}
         handleDelete={handleDelete}
         showAddNewButton={false}
-      />
+      /> */}
     </>
   );
 };

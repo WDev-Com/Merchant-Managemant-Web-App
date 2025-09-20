@@ -61,23 +61,66 @@ const BidsComponent = ({
                         Delete
                       </button>
                     )}
-                    {handleAccept && (
-                      <button
-                        onClick={() =>
-                          handleAccept(bid.merchantId, bid.bidId, "accepted")
-                        }
-                      >
-                        Accept
-                      </button>
-                    )}
-                    {handleReject && (
-                      <button
-                        onClick={() =>
-                          handleReject(bid.merchantId, bid.bidId, "rejected")
-                        }
-                      >
-                        Reject
-                      </button>
+                    {/* Accept & Reject logic based on status */}
+                    {handleAccept && handleReject && (
+                      <>
+                        {(bid.status === "None" ||
+                          bid.status === undefined ||
+                          bid.status === null) && (
+                          <>
+                            <button
+                              onClick={() =>
+                                handleAccept(
+                                  bid.merchantId,
+                                  bid.bidId,
+                                  "accepted"
+                                )
+                              }
+                            >
+                              Accept
+                            </button>
+                            <button
+                              onClick={() =>
+                                handleReject(
+                                  bid.merchantId,
+                                  bid.bidId,
+                                  "rejected"
+                                )
+                              }
+                            >
+                              Reject
+                            </button>
+                          </>
+                        )}
+
+                        {bid.status === "rejected" && (
+                          <button
+                            onClick={() =>
+                              handleAccept(
+                                bid.merchantId,
+                                bid.bidId,
+                                "accepted"
+                              )
+                            }
+                          >
+                            Accept
+                          </button>
+                        )}
+
+                        {bid.status === "accepted" && (
+                          <button
+                            onClick={() =>
+                              handleReject(
+                                bid.merchantId,
+                                bid.bidId,
+                                "rejected"
+                              )
+                            }
+                          >
+                            Reject
+                          </button>
+                        )}
+                      </>
                     )}
                   </td>
                 </tr>
